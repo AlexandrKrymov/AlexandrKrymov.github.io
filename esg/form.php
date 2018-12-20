@@ -28,12 +28,6 @@ function processForm()
 //            Header("Location: ".$_SERVER['PHP_SELF']);
 //        }
     }
-    echo ' <div class="form-success">
-    <p class="form-success__title">Ваша заявка успешно отправлена</p>
-    <img class="form-success__icon" src="assets/images/form-success.png" alt="success" title="success">
-    <p class="form-success__msg">Мы свяжемся с вами в близжайшее время.</p>
-    <a href="#" class="btn" onclick="$(\'.js-modal-close\').click()">Понятно</a>
-</div>';
 }
 // отправка формы на почту
 function sendForm($data)
@@ -41,11 +35,23 @@ function sendForm($data)
 //    здесь указываем сколько угодно почтовых ящиков
     $email_to['0'] = 'hellogoodbye2806@gmail.com';
     $email_to ['1'] = 'alexanderkrymov@yandex.ru';
+
+    $mailStatus = false;
     foreach ($email_to as $key=>$value)
     {
         $headers  = "Content-type: text/html; charset=utf-8 \r\n"; //Кодировка письма
         $headers .= "From: Отправитель:".$data['email']."\r\n"; //Наименование и почта отправителя
-        mail($value,'Заявка',message_mail($data,'Заявка с сайта'),$headers);
+        $mailStatus = mail($value,'Заявка',message_mail($data,'Заявка с сайта'),$headers);
+    }
+    if($mailStatus){
+        echo ' <div class="form-success">
+                    <p class="form-success__title">Ваша заявка успешно отправлена</p>
+                    <img class="form-success__icon" src="assets/images/form-success.png" alt="success" title="success">
+                    <p class="form-success__msg">Мы свяжемся с вами в близжайшее время.</p>
+                    <a href="#" class="btn" onclick="$(\'.js-modal-close\').click()">Понятно</a>
+                </div>';
+    } else {
+        echo 'Произошла ошибка при отпраке';
     }
 }
 function validateForm($data)
